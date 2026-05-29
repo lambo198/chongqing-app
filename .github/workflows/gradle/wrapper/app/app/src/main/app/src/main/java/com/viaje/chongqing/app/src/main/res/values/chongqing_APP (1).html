@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="重庆">
+<meta name="theme-color" content="#0a0a0c">
+<title>重庆 Chongqing</title>
+
+<!-- Inline SVG icons as data URIs — zero external deps -->
+<style>
+:root{
+  --bg:#0a0a0c;--bg2:#111114;--bg3:#18181d;--card:#1c1c22;
+  --border:#2a2a34;--border2:#383845;
+  --gold:#e8b84b;--gold2:#c9922a;
+  --red:#e8443a;--teal:#2ecfb0;--purple:#9b6dff;
+  --blue:#4a9eff;--pink:#ff6b9d;--green:#4ade80;
+  --text:#f0ede6;--muted:#7a7890;--muted2:#9896b0;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bot: env(safe-area-inset-bottom, 0px);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
+html,body{height:100%;overflow:hidden;background:var(--bg)}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;color:var(--text);display:flex;flex-direction:column}
+
+/* ── APP SHELL ── */
+.app-header{
+  background:var(--bg2);border-bottom:1px solid var(--border);
+  padding:calc(var(--safe-top) + .75rem) 1rem .75rem;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-shrink:0;position:relative;z-index:50
+}
+.app-logo{font-size:22px;font-weight:800;letter-spacing:-1px;color:var(--gold)}
+.app-logo span{color:var(--text);font-size:13px;font-weight:400;margin-left:6px;opacity:.6}
+.header-btns{display:flex;gap:8px}
+.hbtn{background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--muted2);padding:6px 10px;font-size:12px;cursor:pointer}
+.hbtn.active{background:var(--gold);color:#000;border-color:var(--gold);font-weight:600}
+
+/* ── BOTTOM NAV ── */
+.bottom-nav{
+  background:var(--bg2);border-top:1px solid var(--border);
+  display:flex;padding-bottom:var(--safe-bot);
+  flex-shrink:0;z-index:50
+}
+.bnav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:.6rem .25rem;cursor:pointer;border:none;background:none;color:var(--muted);transition:color .15s;gap:3px}
+.bnav-item.on{color:var(--gold)}
+.bnav-icon{font-size:20px;line-height:1}
+.bnav-label{font-size:9px;letter-spacing:.03em;font-weight:500}
+
+/* ── SCREENS ── */
+.screen{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;display:none}
+.screen.vis{display:block}
+
+/* ── HOME SCREEN ── */
+.home-hero{
+  background:linear-gradient(160deg,#0f0e0c 0%,#1a1508 100%);
+  padding:1.5rem 1.25rem 1rem;position:relative;overflow:hidden
+}
+.home-hero::before{
+  content:'重庆';position:absolute;right:-15px;top:-15px;
+  font-size:110px;font-weight:800;color:rgba(232,184,75,.05);
+  line-height:1;pointer-events:none
+}
+.hero-eyebrow{font-size:9px;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;margin-bottom:.4rem}
+.hero-title{font-size:30px;font-weight:800;line-height:1;margin-bottom:.3rem}
+.hero-title span{color:var(--gold)}
+.hero-sub{font-size:13px;color:var(--muted2);font-style:italic;margin-bottom:1rem}
+.hero-chips{display:flex;gap:5px;flex-wrap:wrap}
+.chip{font-size:9px;padding:3px 9px;border-radius:20px;letter-spacing:.05em}
+.chip-gold{background:var(--gold);color:#000;font-weight:700}
+.chip-out{border:1px solid var(--border2);color:var(--muted2)}
+.chip-red{border:1px solid rgba(232,68,58,.4);color:var(--red)}
+
+.heat-bar{background:rgba(232,68,58,.08);border-left:2px solid var(--red);padding:.625rem 1.25rem;font-size:12px;color:#ff8c85;line-height:1.5}
+.heat-bar strong{color:var(--red)}
+
+/* quick stats */
+.quick-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-bottom:1px solid var(--border)}
+.qs{padding:.875rem .5rem;text-align:center;border-right:1px solid var(--border);background:var(--bg2)}
+.qs:last-child{border-right:none}
+.qs-n{font-size:18px;font-weight:800;color:var(--gold)}
+.qs-l{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-top:2px}
+
+/* day cards on home */
+.section-header{padding:.875rem 1.25rem .5rem;display:flex;align-items:center;justify-content:space-between}
+.sh-title{font-size:13px;font-weight:700;color:var(--text)}
+.sh-sub{font-size:10px;color:var(--muted)}
+.day-cards-scroll{display:flex;gap:.625rem;padding:.25rem 1.25rem .875rem;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.day-cards-scroll::-webkit-scrollbar{display:none}
+.day-card-mini{
+  flex-shrink:0;width:140px;background:var(--card);border:1px solid var(--border);
+  border-radius:10px;padding:.875rem;cursor:pointer;position:relative;overflow:hidden
+}
+.day-card-mini.rest-day{opacity:.7}
+.dcm-num{font-size:10px;font-weight:700;color:var(--muted);margin-bottom:.25rem;letter-spacing:.05em}
+.dcm-title{font-size:13px;font-weight:700;color:var(--text);line-height:1.25;margin-bottom:.5rem}
+.dcm-date{font-size:10px;color:var(--muted);margin-bottom:.5rem}
+.dcm-bar{height:2px;border-radius:1px;width:100%}
+.dcm-tags{display:flex;gap:3px;flex-wrap:wrap;margin-top:.5rem}
+.dcm-tag{font-size:8px;padding:2px 5px;border-radius:4px;background:rgba(232,184,75,.1);color:var(--gold)}
+.dcm-visited{position:absolute;top:.5rem;right:.5rem;font-size:12px}
+
+/* ── DAYS SCREEN ── */
+.days-header{background:var(--bg2);border-bottom:1px solid var(--border);padding:.75rem 1.25rem;display:flex;align-items:center;gap:.75rem}
+.dh-back{background:none;border:none;color:var(--gold);font-size:20px;cursor:pointer;padding:0;line-height:1}
+.dh-info{flex:1}
+.dh-title{font-size:15px;font-weight:700;color:var(--text)}
+.dh-sub{font-size:11px;color:var(--muted)}
+.dh-nav{display:flex;gap:5px}
+.dh-arr{background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--muted2);padding:4px 8px;font-size:14px;cursor:pointer}
+.dh-arr:disabled{opacity:.3}
+
+.day-body{padding:0}
+
+/* slot cards */
+.slot-card{
+  margin:.5rem .875rem;background:var(--card);border:1px solid var(--border);
+  border-radius:10px;overflow:hidden;cursor:pointer;
+  transition:border-color .15s,transform .1s;position:relative
+}
+.slot-card:active{transform:scale(.99)}
+.slot-card-inner{display:flex;gap:0;align-items:stretch}
+.slot-accent{width:3px;flex-shrink:0}
+.slot-main{padding:.75rem;flex:1;min-width:0;display:flex;gap:10px}
+.slot-left2{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:44px}
+.slot-time2{font-size:8.5px;font-weight:700;color:var(--muted);letter-spacing:.03em;text-align:center}
+.slot-emoji2{font-size:20px;text-align:center}
+.slot-body2{flex:1;min-width:0}
+.slot-name2{font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px;line-height:1.2}
+.slot-desc2{font-size:12px;color:var(--muted2);line-height:1.5;margin-bottom:5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.slot-tags{display:flex;gap:4px;flex-wrap:wrap}
+.stag{font-size:9px;padding:2px 6px;border-radius:4px;font-weight:500}
+.stag-free{background:rgba(46,207,176,.12);color:var(--teal)}
+.stag-price{background:rgba(74,158,255,.1);color:var(--blue)}
+.stag-metro{background:rgba(232,184,75,.08);color:var(--gold)}
+.stag-hot{background:rgba(232,68,58,.1);color:var(--red)}
+.slot-tap-hint{font-size:8px;color:var(--border2);margin-top:4px;letter-spacing:.06em}
+
+.slot-card.done{opacity:.5}
+.slot-card.done .slot-name2::after{content:' ✅';font-size:10px}
+.slot-card.starred .slot-name2::before{content:'⭐ '}
+.user-note-inline{font-size:10px;color:var(--purple);margin-top:3px;font-style:italic}
+
+/* rest day */
+.rest-day-full{padding:2rem 1.25rem;text-align:center}
+.rdf-char{font-size:70px;font-weight:800;color:var(--border2);margin-bottom:.5rem}
+.rdf-title{font-size:20px;font-weight:700;margin-bottom:.5rem}
+.rdf-text{font-size:13px;color:var(--muted2);line-height:1.7;max-width:280px;margin:0 auto 1rem}
+.rdf-opts{display:flex;flex-wrap:wrap;gap:5px;justify-content:center}
+.rdf-opt{font-size:10px;padding:4px 10px;border-radius:20px;border:1px solid var(--border2);color:var(--muted2)}
+
+/* day stats bar */
+.day-stats{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--border);background:var(--bg2)}
+.dst{padding:.6rem .5rem;text-align:center;border-right:1px solid var(--border)}
+.dst:last-child{border-right:none}
+.dst-n{font-size:14px;font-weight:700;color:var(--gold)}
+.dst-l{font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-top:1px}
+
+/* ── DETAIL DRAWER ── */
+.detail-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;opacity:0;pointer-events:none;transition:opacity .25s;backdrop-filter:blur(5px)}
+.detail-overlay.open{opacity:1;pointer-events:all}
+.detail-drawer{
+  position:fixed;bottom:0;left:0;right:0;
+  background:var(--bg2);border-top:1px solid var(--border2);
+  border-radius:16px 16px 0 0;
+  z-index:201;max-height:90vh;overflow-y:auto;
+  transform:translateY(100%);transition:transform .3s cubic-bezier(.32,1,.23,1);
+  -webkit-overflow-scrolling:touch;
+  padding-bottom:var(--safe-bot)
+}
+.detail-drawer.open{transform:translateY(0)}
+.dd-handle{width:36px;height:3px;background:var(--border2);border-radius:2px;margin:.875rem auto .25rem}
+.dd-close{position:absolute;top:.75rem;right:1rem;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:10px;color:var(--muted);cursor:pointer;letter-spacing:.04em}
+
+.dd-header{padding:.5rem 1.25rem 1rem;border-bottom:1px solid var(--border)}
+.dd-ey{font-size:8px;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.3rem}
+.dd-title{font-size:20px;font-weight:800;line-height:1.1;margin-bottom:.5rem}
+.dd-pills{display:flex;gap:4px;flex-wrap:wrap}
+.dd-pill{font-size:9px;padding:3px 8px;border-radius:4px;font-weight:500}
+
+.dd-section{padding:.875rem 1.25rem;border-bottom:1px solid var(--border)}
+.dd-section:last-child{border-bottom:none;padding-bottom:1.5rem}
+.dd-sec-title{font-size:8px;color:var(--gold);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.625rem}
+
+.dd-map-box{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:.875rem;margin-bottom:.75rem;display:flex;gap:10px;align-items:flex-start}
+.dd-map-icon{font-size:26px;flex-shrink:0}
+.dd-map-name{font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px}
+.dd-map-addr{font-size:10px;color:var(--muted);line-height:1.5;font-family:'SF Mono',monospace}
+
+.steps-list{display:flex;flex-direction:column;gap:.5rem}
+.step-item{display:flex;gap:8px;align-items:flex-start}
+.step-num{width:20px;height:20px;border-radius:50%;background:rgba(232,184,75,.15);border:1px solid rgba(232,184,75,.3);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--gold);font-weight:700;flex-shrink:0;margin-top:1px}
+.step-text{font-size:12.5px;color:var(--muted2);line-height:1.55;flex:1}
+.step-text strong{color:var(--text);font-weight:600}
+
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+.info-box{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:.625rem}
+.info-label{font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.2rem}
+.info-val{font-size:12px;color:var(--text);line-height:1.4}
+
+.zh-box{background:var(--bg3);border:1px solid var(--border);border-radius:6px;overflow:hidden}
+.zh-row{display:flex;justify-content:space-between;align-items:center;padding:.5rem .875rem;border-bottom:1px solid var(--border)}
+.zh-row:last-child{border-bottom:none}
+.zh-es{font-size:12px;color:var(--muted2)}
+.zh-right{text-align:right}
+.zh-cn{font-size:14px;color:var(--text);display:block}
+.zh-py{font-size:9px;color:var(--teal);font-family:'SF Mono',monospace}
+
+.tips-list{display:flex;flex-direction:column;gap:.5rem}
+.tip-item{display:flex;gap:8px;font-size:12.5px;color:var(--muted2);line-height:1.55}
+.tip-icon{flex-shrink:0;font-size:14px}
+
+/* ── EXPLORE SCREEN ── */
+.explore-categories{padding:.875rem 1.25rem;display:flex;flex-direction:column;gap:.625rem}
+.explore-cat{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.ec-head{display:flex;align-items:center;gap:10px;padding:.875rem 1rem;cursor:pointer}
+.ec-emoji{font-size:22px;flex-shrink:0}
+.ec-info{flex:1}
+.ec-title{font-size:14px;font-weight:700;color:var(--text)}
+.ec-sub{font-size:11px;color:var(--muted);margin-top:1px}
+.ec-arrow{font-size:12px;color:var(--muted);transition:transform .2s}
+.ec-arrow.open{transform:rotate(90deg)}
+.ec-content{display:none;border-top:1px solid var(--border)}
+.ec-content.open{display:block}
+.ec-item{display:flex;align-items:center;gap:10px;padding:.625rem 1rem;border-bottom:1px solid rgba(42,42,52,.5);cursor:pointer}
+.ec-item:last-child{border-bottom:none}
+.ec-num{font-size:8px;background:var(--muted);color:#000;border-radius:3px;padding:2px 4px;font-weight:700;flex-shrink:0}
+.ec-iname{font-size:13px;color:var(--text);flex:1}
+.ec-iaddr{font-size:10px;color:var(--muted)}
+.ec-chevron{font-size:10px;color:var(--border2)}
+
+/* ── SAVED SCREEN ── */
+.saved-empty{padding:3rem 1.25rem;text-align:center}
+.se-icon{font-size:48px;margin-bottom:.75rem}
+.se-title{font-size:16px;font-weight:700;color:var(--text);margin-bottom:.5rem}
+.se-text{font-size:13px;color:var(--muted2);line-height:1.6}
+.saved-list{padding:.875rem 1.25rem;display:flex;flex-direction:column;gap:.5rem}
+.saved-item{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:.75rem;display:flex;align-items:center;gap:10px;cursor:pointer}
+.si-emoji{font-size:20px;flex-shrink:0}
+.si-body{flex:1;min-width:0}
+.si-name{font-size:13px;font-weight:600;color:var(--text)}
+.si-day{font-size:10px;color:var(--muted)}
+.si-remove{color:var(--muted);font-size:16px;padding:4px;background:none;border:none;cursor:pointer}
+
+/* ── EDIT SHEET ── */
+.edit-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:300;opacity:0;pointer-events:none;transition:opacity .2s;backdrop-filter:blur(3px)}
+.edit-overlay.open{opacity:1;pointer-events:all}
+.edit-sheet{
+  position:fixed;bottom:0;left:0;right:0;background:var(--bg2);
+  border-top:1px solid var(--border2);border-radius:16px 16px 0 0;
+  z-index:301;max-height:88vh;overflow-y:auto;
+  transform:translateY(100%);transition:transform .28s cubic-bezier(.32,1,.23,1);
+  padding-bottom:var(--safe-bot);-webkit-overflow-scrolling:touch
+}
+.edit-sheet.open{transform:translateY(0)}
+.es-handle{width:36px;height:3px;background:var(--border2);border-radius:2px;margin:.875rem auto .5rem}
+.es-title{font-size:16px;font-weight:700;color:var(--text);padding:.25rem 1.25rem .875rem;text-align:center}
+.es-section{padding:.625rem 1.25rem}
+.es-label{font-size:9px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.375rem}
+.es-preview{font-size:44px;text-align:center;padding:.875rem;background:var(--bg3);border:1px solid var(--border);border-radius:8px;margin-bottom:.625rem}
+.emoji-scroll{max-height:170px;overflow-y:auto;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:.625rem}
+.emoji-cat-label{font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin:.25rem 0 .1rem}
+.emoji-grid{display:flex;flex-wrap:wrap;gap:3px;margin-bottom:.25rem}
+.epick{font-size:22px;background:none;border:1.5px solid transparent;border-radius:6px;padding:3px;cursor:pointer;transition:all .15s;line-height:1}
+.epick.sel{background:rgba(232,184,75,.15);border-color:rgba(232,184,75,.5)}
+.es-input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:14px;padding:.625rem .75rem;outline:none;font-family:inherit}
+.es-input:focus{border-color:var(--gold)}
+.es-textarea{min-height:64px;resize:vertical;line-height:1.5}
+.es-toggles{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:.25rem}
+.es-toggle{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted2);cursor:pointer}
+.es-toggle input{width:16px;height:16px;accent-color:var(--gold)}
+.es-actions{display:grid;grid-template-columns:1fr 1fr;gap:.625rem;padding:.875rem 1.25rem 1.25rem}
+.es-btn{padding:.75rem;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;border:none}
+.es-cancel{background:var(--bg3);color:var(--muted);border:1px solid var(--border)}
+.es-save{background:var(--gold);color:#000}
+
+/* ── TOAST ── */
+.toast{
+  position:fixed;bottom:calc(var(--safe-bot) + 72px);left:50%;
+  transform:translateX(-50%) translateY(8px);
+  background:var(--card);color:var(--text);border:1px solid var(--border2);
+  border-radius:20px;padding:.5rem 1.1rem;font-size:12px;
+  z-index:400;opacity:0;transition:all .25s;white-space:nowrap;pointer-events:none
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ── FAB EDIT ── */
+#fab-edit{
+  position:fixed;bottom:calc(var(--safe-bot) + 72px);right:1rem;
+  z-index:100;background:var(--gold);color:#000;border:none;
+  border-radius:24px;padding:.65rem 1rem;font-size:11px;font-weight:700;
+  cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,.5);
+  letter-spacing:.04em;transition:all .2s
+}
+#fab-edit:active{transform:scale(.95)}
+body.edit-mode #fab-edit{background:var(--teal);color:#000}
+body.edit-mode .slot-card{cursor:default}
+
+.edit-btn-slot{
+  position:absolute;top:.5rem;right:.5rem;
+  background:rgba(232,184,75,.12);border:1px solid rgba(232,184,75,.25);
+  color:var(--gold);border-radius:5px;padding:3px 7px;font-size:10px;
+  cursor:pointer;z-index:10;display:none
+}
+body.edit-mode .edit-btn-slot{display:block}
+
+/* PROGRESS BAR for days visited */
+.progress-bar-wrap{padding:.5rem 1.25rem}
+.pb-label{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-bottom:.3rem}
+.pb-track{height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.pb-fill{height:100%;background:var(--gold);border-radius:2px;transition:width .5s}
+
+/* scroll helpers */
+::-webkit-scrollbar{width:2px;height:2px}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:1px}
+</style>
+</head>
+<body>
+
+<!-- APP HEADER -->
+<div class="app-header">
+  <div class="app-logo">重庆 <span>2–12 Jun</span></div>
+  <div class="header-btns">
+    <button class="hbtn" id="edit-toggle" onclick="toggleEditMode()">✏️ Editar</button>
+    <button class="hbtn" onclick="showScreen('saved')">⭐</button>
+  </div>
+</div>
+
+<!-- SCREENS -->
+<!-- HOME -->
+<div class="screen vis" id="s-home">
+  <div class="home-hero">
+    <div class="hero-eyebrow">Guía definitiva · Offline</div>
+    <div class="hero-title"><span>Chongqing</span> 重庆</div>
+    <div class="hero-sub">La ciudad más cyberpunk del mundo</div>
+    <div class="hero-chips">
+      <span class="chip chip-gold">Mountwell Jiefangbei</span>
+      <span class="chip chip-out">10 noches</span>
+      <span class="chip chip-out">60 lugares</span>
+      <span class="chip chip-red">Jun ~36°C</span>
+    </div>
+  </div>
+  <div class="heat-bar"><strong>Estrategia junio:</strong> excursiones antes 11h · tardes en malls AC · noches en la calle.</div>
+  <div class="quick-stats">
+    <div class="qs"><div class="qs-n">10</div><div class="qs-l">Días</div></div>
+    <div class="qs"><div class="qs-n" id="qs-visited">0</div><div class="qs-l">Vistos</div></div>
+    <div class="qs"><div class="qs-n" id="qs-stars">0</div><div class="qs-l">Favs</div></div>
+    <div class="qs"><div class="qs-n">60</div><div class="qs-l">Lugares</div></div>
+  </div>
+  <div class="progress-bar-wrap">
+    <div class="pb-label"><span>Progreso del viaje</span><span id="pb-pct">0%</span></div>
+    <div class="pb-track"><div class="pb-fill" id="pb-fill" style="width:0%"></div></div>
+  </div>
+  <div class="section-header">
+    <span class="sh-title">📅 Los 10 días</span>
+    <span class="sh-sub">Toca para ver el día</span>
+  </div>
+  <div class="day-cards-scroll" id="day-cards-container"></div>
+  <div class="section-header"><span class="sh-title">🔥 Imprescindibles</span></div>
+  <div style="padding:.25rem .875rem .875rem;display:flex;flex-direction:column;gap:.5rem" id="highlights-container"></div>
+</div>
+
+<!-- DAYS -->
+<div class="screen" id="s-days">
+  <div class="days-header" id="day-nav-header">
+    <button class="dh-back" onclick="showScreen('home')">‹</button>
+    <div class="dh-info">
+      <div class="dh-title" id="dn-title">Día 1</div>
+      <div class="dh-sub" id="dn-sub">Martes 2 junio</div>
+    </div>
+    <div class="dh-nav">
+      <button class="dh-arr" id="btn-prev" onclick="prevDay()">‹</button>
+      <button class="dh-arr" id="btn-next" onclick="nextDay()">›</button>
+    </div>
+  </div>
+  <div id="day-content"></div>
+</div>
+
+<!-- EXPLORE -->
+<div class="screen" id="s-explore">
+  <div style="padding:.875rem 1.25rem .5rem"><span style="font-size:16px;font-weight:700">📍 60 Lugares</span></div>
+  <div class="explore-categories" id="explore-container"></div>
+</div>
+
+<!-- SAVED -->
+<div class="screen" id="s-saved">
+  <div style="padding:.875rem 1.25rem .5rem;display:flex;justify-content:space-between;align-items:center">
+    <span style="font-size:16px;font-weight:700">⭐ Favoritos y notas</span>
+    <button onclick="resetAll()" style="font-size:10px;color:var(--red);background:none;border:none;cursor:pointer;padding:4px 8px;border:1px solid rgba(232,68,58,.3);border-radius:6px">Resetear todo</button>
+  </div>
+  <div id="saved-container"></div>
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <button class="bnav-item on" onclick="showScreen('home')" id="bnav-home">
+    <span class="bnav-icon">🏠</span><span class="bnav-label">Inicio</span>
+  </button>
+  <button class="bnav-item" onclick="showScreen('days',0)" id="bnav-days">
+    <span class="bnav-icon">📅</span><span class="bnav-label">Días</span>
+  </button>
+  <button class="bnav-item" onclick="showScreen('explore')" id="bnav-explore">
+    <span class="bnav-icon">📍</span><span class="bnav-label">Lugares</span>
+  </button>
+  <button class="bnav-item" onclick="showScreen('saved')" id="bnav-saved">
+    <span class="bnav-icon">⭐</span><span class="bnav-label">Guardados</span>
+  </button>
+</div>
+
+<!-- FAB -->
+<button id="fab-edit" onclick="toggleEditMode()">✏️ EDITAR</button>
+
+<!-- DETAIL DRAWER -->
+<div class="detail-overlay" id="det-overlay" onclick="closeDetail()"></div>
+<div class="detail-drawer" id="det-drawer">
+  <div class="dd-handle"></div>
+  <button class="dd-close" onclick="closeDetail()">✕ CERRAR</button>
+  <div id="det-content"></div>
+</div>
+
+<!-- EDIT SHEET -->
+<div class="edit-overlay" id="edit-overlay" onclick="closeEditSheet()"></div>
+<div class="edit-sheet" id="edit-sheet">
+  <div class="es-handle"></div>
+  <div class="es-title">Editar tarjeta</div>
+  <div id="edit-sheet-content"></div>
+  <div class="es-actions">
+    <button class="es-btn es-cancel" onclick="closeEditSheet()">Cancelar</button>
+    <button class="es-btn es-save" id="es-save-btn">Guardar</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ═══════════════════════════════════
+   DATA
+═══════════════════════════════════ */
+const DAYS=[
+  {
+    num:1,day:'D1',date:'Mar 2 Jun',title:'Llegada + Hongya Cave',
+    color:'#4a9eff',type:'night',rest:false,
+    stats:['3','0¥','Suave','19:30'],
+    statLabels:['Lugares','Entradas','Nivel','Hora clave'],
+    slots:[
+      {id:'s1_1',time:'TARDE',emoji:'🏨',cat:'rest',name:'Check-in Mountwell',
+       desc:'Instalación, ducha, recuperarse del viaje. Pide habitación en piso alto con vistas.',
+       tags:[{t:'Hotel Jiefangbei',c:'metro'}],
+       place:'hotel'},
+      {id:'s1_2',time:'18:30',emoji:'🍲',cat:'food',name:'Primera cena: hotpot Bayi Road',
+       desc:'A 3 min del hotel. Pide "微辣" (wēi là) = poco picante. Señala en la carta con fotos.',
+       tags:[{t:'~60–80 CNY/pers',c:'price'},{t:'3 min a pie',c:'metro'}],
+       place:'bayi'},
+      {id:'s1_3',time:'19:30',emoji:'🏮',cat:'night',name:'Hongya Cave (洪崖洞)',
+       desc:'La foto de Spirited Away. Ve al puente Qiansimen para el ángulo icónico. Luces 19:00–23:00.',
+       tags:[{t:'GRATIS',c:'free'},{t:'7 min a pie',c:'metro'}],
+       place:'hongya'},
+      {id:'s1_4',time:'21:00',emoji:'🌉',cat:'night',name:'Qiansimen Bridge + paseo nocturno',
+       desc:'El puente iluminado da la mejor perspectiva de Hongya Cave. Paseo por el CBD brillante.',
+       tags:[{t:'GRATIS',c:'free'}],
+       place:'qiansimen'}
+    ]
+  },
+  {
+    num:2,day:'D2',date:'Mié 3 Jun',title:'Día Otaku Total',
+    color:'#9b6dff',type:'anime',rest:false,
+    stats:['8','2 CNY','Alta','14:00'],
+    statLabels:['Lugares','Entradas','Compras','Hora clave'],
+    slots:[
+      {id:'s2_1',time:'9:00',emoji:'🚂',cat:'night',name:'Liziba Station · metro dentro del edificio',
+       desc:'El tren atraviesa pisos 6–8 de un bloque residencial. Ve temprano para la foto sin gente.',
+       tags:[{t:'GRATIS',c:'free'},{t:'Metro L2 → Liziba',c:'metro'}],
+       place:'liziba'},
+      {id:'s2_2',time:'10:00',emoji:'📷',cat:'anime',name:'Caiyanba Overpass · punto secreto local',
+       desc:'El ángulo secreto que usan los fotógrafos locales. Casi ningún turista lo conoce.',
+       tags:[{t:'GRATIS',c:'free'},{t:'Joya oculta',c:'hot'}],
+       place:'caiyanba'},
+      {id:'s2_3',time:'11:00',emoji:'🌆',cat:'night',name:'Kuixinglou Square · edificio imposible',
+       desc:'Viral: pareces estar en planta baja y estás en el piso 34. Edificios apilados sobre montañas.',
+       tags:[{t:'GRATIS',c:'free'}],
+       place:'kuixinglou'},
+      {id:'s2_4',time:'12:30',emoji:'🍜',cat:'food',name:'Bayi Food Street · fideos locales auténticos',
+       desc:'Xiao Mian (小面) — los fideos con aceite rojo que desayunan los chongqingneses. Señala.',
+       tags:[{t:'~15–25 CNY',c:'price'},{t:'A pie del hotel',c:'metro'}],
+       place:'bayi'},
+      {id:'s2_5',time:'14:00',emoji:'🎌',cat:'anime',name:'Guanyinqiao Anime District · tarde entera',
+       desc:'El epicentro otaku. Figuras, mangas, cosplay, gachas, blind boxes. AC perfecto en junio.',
+       tags:[{t:'Entrada libre',c:'free'},{t:'Metro L3/9',c:'metro'}],
+       place:'guanyinqiao'},
+      {id:'s2_6',time:'14:30',emoji:'🐾',cat:'anime',name:'Pokémon Center Chongqing',
+       desc:'Uno de los pocos Centers oficiales en China. Cartas exclusivas mercado chino. Muy buscadas.',
+       tags:[{t:'Entrada libre',c:'free'},{t:'Cartas desde 30 CNY',c:'price'}],
+       place:'pokemon'},
+      {id:'s2_7',time:'15:30',emoji:'📦',cat:'anime',name:'Pop Mart + Niko and...',
+       desc:'Blind boxes y figuras exclusivas China. Niko and...: colabs de anime activas (JJK, DS...)',
+       tags:[{t:'Blind boxes ~59–99 CNY',c:'price'},{t:'Nendoroids ~150–250 CNY',c:'price'}],
+       place:'popmart'},
+      {id:'s2_8',time:'19:30',emoji:'💡',cat:'anime',name:'Deyi World de noche · cyberpunk LED',
+       desc:'Pantallas LED de 5 pisos. Ambiente cyberpunk puro. Eventos anime frecuentes. Fotos épicas.',
+       tags:[{t:'GRATIS entrar',c:'free'}],
+       place:'deyi'}
+    ]
+  },
+  {
+    num:3,day:'D3',date:'Jue 4 Jun',title:'Pandas + Arte + Teatro',
+    color:'#2ecfb0',type:'nature',rest:false,
+    stats:['5','~450¥','Media','8:30'],
+    statLabels:['Lugares','Entradas','Nivel','Hora crítica'],
+    slots:[
+      {id:'s3_1',time:'8:30',emoji:'🐼',cat:'nature',name:'Chongqing Zoo · 22 pandas gigantes',
+       desc:'El zoo con más pandas del mundo. Activos 10:00–11:30h. Llega a las 8:30. Monos dorados también.',
+       tags:[{t:'25 CNY (~3€)',c:'price'},{t:'Metro L2 → Dongwuyuan',c:'metro'},{t:'¡Ir temprano!',c:'hot'}],
+       place:'zoo'},
+      {id:'s3_2',time:'12:30',emoji:'🍛',cat:'food',name:'Pausa almuerzo + AC obligatorio',
+       desc:'Descansa en las horas de máximo calor 13–15h. Restaurante AC en zona Yangjiaping.',
+       tags:[{t:'~30–50 CNY',c:'price'}],
+       place:null},
+      {id:'s3_3',time:'15:30',emoji:'🏺',cat:'culture',name:'Ciqikou Ancient Town (磁器口)',
+       desc:'Pueblo Dinastía Song. Explora las callejuelas traseras — menos turistas, mejor ambiente.',
+       tags:[{t:'GRATIS',c:'free'},{t:'Metro L1 → Ciqikou',c:'metro'}],
+       place:'ciqikou'},
+      {id:'s3_4',time:'17:30',emoji:'🎨',cat:'anime',name:'Huangjueping Graffiti Street · 1,25km',
+       desc:'La calle de grafiti legal más larga de Asia. Zona universitaria. Mural del panda gigante.',
+       tags:[{t:'GRATIS',c:'free'}],
+       place:'graffiti'},
+      {id:'s3_5',time:'19:30',emoji:'🎭',cat:'culture',name:'Show Chongqing 1949 · teatro 360°',
+       desc:'Escenario y asientos giran simultáneamente. ~70 min. Reserva en Trip.com. Sección B = mejor.',
+       tags:[{t:'~180–220 CNY',c:'price'},{t:'Reservar antes',c:'hot'}],
+       place:'show1949'}
+    ]
+  },
+  {
+    num:4,day:'D4',date:'Vie 5 Jun',title:'Museos + Historia + Crucero',
+    color:'#c9922a',type:'culture',rest:false,
+    stats:['8','~180¥','Media','AC todo'],
+    statLabels:['Lugares','Entradas','Nivel','el día'],
+    slots:[
+      {id:'s4_1',time:'9:00',emoji:'🏛️',cat:'culture',name:'Three Gorges Museum · GRATIS + AC brutal',
+       desc:'Uno de los mejores museos de China y es gratis. Historia del Yangtze, civilización Ba-Yu.',
+       tags:[{t:'GRATIS',c:'free'},{t:'Metro L1/2 → Lianglukou',c:'metro'}],
+       place:'threegorgues'},
+      {id:'s4_2',time:'11:30',emoji:'🏟️',cat:'culture',name:'Great Hall of the People · exterior',
+       desc:'Arquitectura soviética monumental. Inspirado en el Templo del Cielo de Pekín. Foto obligatoria.',
+       tags:[{t:'GRATIS exterior',c:'free'}],
+       place:null},
+      {id:'s4_3',time:'12:30',emoji:'📚',cat:'anime',name:'Zhongshan Bookstore piso 50',
+       desc:'Librería Zen en piso 50 con vistas alucinantes. Sección manga en chino. Pausa perfecta del calor.',
+       tags:[{t:'GRATIS entrar',c:'free'},{t:'Café ~30–50 CNY',c:'price'}],
+       place:'bookstore'},
+      {id:'s4_4',time:'14:30',emoji:'⛩️',cat:'culture',name:'Luohan Temple · 500 arhats en el CBD',
+       desc:'Templo budista Dinastía Song rodeado de rascacielos. 500 estatuas de terracota únicas.',
+       tags:[{t:'~5–10 CNY',c:'price'}],
+       place:'luohan'},
+      {id:'s4_5',time:'16:00',emoji:'🪜',cat:'culture',name:'Shibati / 18 Steps (十八梯)',
+       desc:'Antiguas escaleras del puerto histórico recuperadas con murales. Baja desde arriba.',
+       tags:[{t:'GRATIS',c:'free'}],
+       place:'shibati'},
+      {id:'s4_6',time:'17:30',emoji:'🏯',cat:'culture',name:'Huguang Guild Hall · mercaderes Qing',
+       desc:'Fundado en 1759. Centro de comercio del Yangtze en la Dinastía Qing. Junto al río.',
+       tags:[{t:'~30 CNY',c:'price'}],
+       place:null},
+      {id:'s4_7',time:'20:00',emoji:'⛵',cat:'night',name:'Crucero nocturno Two Rivers',
+       desc:'1h cruzando Yangtze-Jialing con el skyline iluminado. Vista imposible desde tierra.',
+       tags:[{t:'~60–120 CNY',c:'price'},{t:'Chaotianmen Port',c:'metro'}],
+       place:'crucero'},
+      {id:'s4_8',time:'21:30',emoji:'🌃',cat:'night',name:'Chaotianmen Square de noche',
+       desc:'Plaza donde se juntan los dos ríos. Raffles City iluminado al fondo. Impresionante.',
+       tags:[{t:'GRATIS',c:'free'}],
+       place:'chaotianmen'}
+    ]
+  },
+  {
+    num:5,day:'D5',date:'Sáb 6 Jun',title:'Dazu UNESCO + Show Drones',
+    color:'#e8443a',type:'excursion',rest:false,
+    stats:['2','~315¥','Alta','7:00'],
+    statLabels:['Lugares','Total','Física','Salida'],
+    slots:[
+      {id:'s5_1',time:'7:00',emoji:'🚌',cat:'excursion',name:'Salida temprana · tour organizado',
+       desc:'2h a Dazu. Reserva en Trip.com. PASAPORTE físico obligatorio. Agua, sombrero, 50+ FPS.',
+       tags:[{t:'Tour ~175 CNY transporte',c:'price'},{t:'Pasaporte obligatorio',c:'hot'}],
+       place:null},
+      {id:'s5_2',time:'9:30',emoji:'🗿',cat:'excursion',name:'Dazu Rock Carvings (大足石刻) · UNESCO',
+       desc:'+50.000 esculturas budistas. Baodingshan es la más impresionante. Guía inglés imprescindible.',
+       tags:[{t:'~115 CNY entrada',c:'price'},{t:'Guía inglés ~100 CNY',c:'price'}],
+       place:'dazu'},
+      {id:'s5_3',time:'15:00',emoji:'🏨',cat:'rest',name:'Regreso + siesta en hotel',
+       desc:'Excursión agotadora. 2h descanso. Recarga para la noche más épica del viaje.',
+       tags:[],place:null},
+      {id:'s5_4',time:'20:15',emoji:'🚁',cat:'night',name:'Show de Drones · 11.787 · Récord Guinness',
+       desc:'Sábados garantizado. Llega 45 min antes. Desde Nanbin Road o Chaotianmen. Graba en vídeo.',
+       tags:[{t:'GRATIS',c:'free'},{t:'Sábados 21:00',c:'hot'}],
+       place:'drones'}
+    ]
+  },
+  {
+    num:6,day:'D6',date:'Dom 7 Jun',title:'☁ Día de Descanso',
+    color:'#7a7890',type:'rest',rest:true,
+    restIdeas:['Revisitar tiendas anime','Tank Art Center (gratis)','Spa pies local ~80 CNY','Raffles Crystal Skywalk','Beicang Creative Park','Chongqing Aquarium','Piscina del hotel','Café de acantilado Eling','Pasear sin destino']
+  },
+  {
+    num:7,day:'D7',date:'Lun 8 Jun',title:'Malls + Secretos + Noches pareja',
+    color:'#9b6dff',type:'anime',rest:false,
+    stats:['7','~350¥','Urbana','AC todo'],
+    statLabels:['Lugares','Opcional','Nivel','el día'],
+    slots:[
+      {id:'s7_1',time:'10:00',emoji:'🐟',cat:'anime',name:'Chongqing IFS · túnel de tiburones',
+       desc:'Mall de lujo con tiburones y rayas en túnel acuático dentro del centro comercial. Gratis ver.',
+       tags:[{t:'GRATIS ver túnel',c:'free'},{t:'A pie del hotel',c:'metro'}],
+       place:'ifs'},
+      {id:'s7_2',time:'11:00',emoji:'🌁',cat:'night',name:'Raffles Crystal Skywalk · 250 metros',
+       desc:'Puente de cristal entre 4 torres a 250m. Exterior con arnés o interior de mirador. Adrenalina.',
+       tags:[{t:'Exterior ~200–300 CNY',c:'price'},{t:'Mirador interior gratis',c:'free'}],
+       place:'raffles'},
+      {id:'s7_3',time:'14:00',emoji:'🎨',cat:'anime',name:'Beicang Creative Park · almacén 1891',
+       desc:'Almacén de comerciantes británicos del s.XIX con 40+ boutiques de diseño local. Muy cool.',
+       tags:[{t:'GRATIS entrar',c:'free'}],
+       place:'beicang'},
+      {id:'s7_4',time:'15:30',emoji:'🏚️',cat:'culture',name:'Baixiangju · el edificio laberinto',
+       desc:'24 pisos interconectados sin ascensores. Puedes perderte literalmente. Señalización para turistas.',
+       tags:[{t:'GRATIS',c:'free'}],
+       place:null},
+      {id:'s7_5',time:'17:30',emoji:'☕',cat:'night',name:'Cafés del Acantilado de Eling · Ghibli real',
+       desc:'Cafés colgados sobre el acantilado con vistas al skyline neblinoso. Atardecer de película.',
+       tags:[{t:'~100–200 CNY/persona',c:'price'}],
+       place:'eling'},
+      {id:'s7_6',time:'20:00',emoji:'🌉',cat:'night',name:'Egongyan Bridge de noche',
+       desc:'El puente rojo doble que enmarca el skyline iluminado. Más viral de Chongqing de noche.',
+       tags:[{t:'GRATIS',c:'free'},{t:'15 min en taxi',c:'metro'}],
+       place:'egongyan'},
+      {id:'s7_7',time:'21:30',emoji:'🛒',cat:'anime',name:'Times Paradise Walk + Hongding International',
+       desc:'Techwear, streetwear, marcas locales. Busca "机能风" (techwear chino). Cierra a las 22h.',
+       tags:[{t:'Entrada libre',c:'free'},{t:'Ropa ~100–500 CNY',c:'price'}],
+       place:'hongding'}
+    ]
+  },
+  {
+    num:8,day:'D8',date:'Mar 9 Jun',title:'Wulong Karst UNESCO',
+    color:'#e8443a',type:'excursion',rest:false,
+    stats:['4','~350¥','Máxima','6:30'],
+    statLabels:['Lugares','Total','Física','Salida'],
+    slots:[
+      {id:'s8_1',time:'6:30',emoji:'🚗',cat:'excursion',name:'Salida muy temprana · tour privado',
+       desc:'190 km (~3h). Trip.com. Zapatos trekking, agua 2L, ropa cómoda, protector solar, snacks.',
+       tags:[{t:'Tour ~200–300 CNY',c:'price'}],
+       place:null},
+      {id:'s8_2',time:'10:00',emoji:'🪨',cat:'nature',name:'Wulong Karst + Tres Puentes Naturales · UNESCO',
+       desc:'Tres arcos de piedra colosales (el mayor 235m). Escenario de Transformers. Muchas escaleras.',
+       tags:[{t:'~140–180 CNY',c:'price'},{t:'190 km de Chongqing',c:'metro'}],
+       place:'wulong'},
+      {id:'s8_3',time:'13:00',emoji:'🏞️',cat:'nature',name:'Longshuixia Gap · desfiladero con río',
+       desc:'Fresco por el agua — el mejor alivio del calor de junio. Paredes verticales de 100m.',
+       tags:[{t:'Incluido en park',c:'free'}],
+       place:'longshuixia'},
+      {id:'s8_4',time:'15:00',emoji:'🦇',cat:'nature',name:'Furong Cave (芙蓉洞) · 25°C constantes',
+       desc:'2,7 km de cueva. 25°C dentro vs 36°C fuera. El mejor alivio del calor del viaje. No te lo pierdas.',
+       tags:[{t:'~80 CNY extra',c:'price'},{t:'¡Imprescindible!',c:'hot'}],
+       place:'furong'}
+    ]
+  },
+  {
+    num:9,day:'D9',date:'Mié 10 Jun',title:'☁ Descanso + Spa Pareja',
+    color:'#ff6b9d',type:'rest',rest:true,
+    restIdeas:['Haitang Xiaoyue Hot Springs 98 CNY','Nanbin Road noche romántica','Nanfeng Cliff Restaurant','Tank Art Center gratis','Nanshan Botanical Garden','Compras finales anime','Masaje de pies ~80 CNY','Qianxi 24h SPA']
+  },
+  {
+    num:10,day:'D10',date:'Jue 11 Jun',title:'Última Jornada Épica',
+    color:'#4a9eff',type:'night',rest:false,
+    stats:['6','~250¥','Media','Vuelo 12'],
+    statLabels:['Lugares','Entradas','Nivel',''],
+    slots:[
+      {id:'s10_1',time:'9:00',emoji:'🦒',cat:'nature',name:'Yongchuan Wildlife World · safari',
+       desc:'58 km. +400 especies. Jirafas que comen de tu mano. Bus safari o a pie. Muy diferente al zoo.',
+       tags:[{t:'80 CNY entre semana',c:'price'},{t:'Metro L3 → Longtousi + bus',c:'metro'}],
+       place:'wildlife'},
+      {id:'s10_2',time:'14:00',emoji:'🚡',cat:'night',name:'Teleférico del Yangtze · cruzar el río',
+       desc:'En funcionamiento desde 1987. Las vistas del skyline desde la telecabina son cinematográficas.',
+       tags:[{t:'~15–20 CNY',c:'price'}],
+       place:'teleferico'},
+      {id:'s10_3',time:'15:30',emoji:'📸',cat:'night',name:'Grand Theater · ángulo secreto Hongya',
+       desc:'Desde Jiangbeizui el ángulo alternativo de Hongya Cave incluyendo el puente. Casi ningún turista.',
+       tags:[{t:'GRATIS',c:'free'}],
+       place:null},
+      {id:'s10_4',time:'16:30',emoji:'🪜',cat:'culture',name:'Longmenhao Old Street · sin turistas',
+       desc:'La calle antigua sin masificación. Arquitectura s.XX, vistas al Yangtze. El Chongqing real.',
+       tags:[{t:'GRATIS',c:'free'}],
+       place:'longmenhao'},
+      {id:'s10_5',time:'19:00',emoji:'🍢',cat:'food',name:'Aijia Hotpot · 5.000 comensales · Guinness',
+       desc:'El restaurante de hotpot más grande del mundo. En la ladera de una montaña. Cena de despedida.',
+       tags:[{t:'~100–150 CNY/pers',c:'price'}],
+       place:'aijia'},
+      {id:'s10_6',time:'21:00',emoji:'🏮',cat:'night',name:'Última visita Hongya Cave + Dajia Alley',
+       desc:'Despedida de la ciudad. Pasarela de acantilado junto a Hongya. Fotos finales, paseo tranquilo.',
+       tags:[{t:'GRATIS',c:'free'}],
+       place:'hongya'}
+    ]
+  }
+];
+
+const PLACE_DETAIL={
+  hongya:{name:'Hongya Cave (洪崖洞)',emoji:'🏮',cat:'night',
+    addr:'No. 88 Binjiang Road, Yuzhong District',district:'重庆市渝中区滨江路88号',
+    steps:['<strong>A pie del hotel:</strong> Sal del Mountwell por Xinhua Road hacia el norte. ~7 minutos caminando al río Jialing.',
+           '<strong>La foto icónica:</strong> No entres directo. Cruza el puente <strong>Qiansimen</strong> hacia el otro lado del río. Desde allí, mirando atrás, verás TODO el edificio iluminado — esa es la foto de Spirited Away.',
+           '<strong>Dentro:</strong> 11 pisos con restaurantes, tiendas y bares. Sube y baja por las escaleras exteriores. Pisos 8–11 mejores vistas.',
+           '<strong>Dajia Alley:</strong> Pasarela de acantilado en Cangbai Road junto al edificio. Ángulo alternativo y menos gente.'],
+    info:[{l:'Horario',v:'Abierto 24h · tiendas 10–23h'},{l:'Luces',v:'Se encienden ~18:30–19:00'},{l:'Precio',v:'TOTALMENTE GRATIS'},{l:'Mejor hora',v:'21:00–22:00 menos gente'},{l:'Hotel',v:'~7 min a pie'},{l:'Metro',v:'L1/6 → Xiaoshizi Exit 9'}],
+    chinese:[{es:'¿Dónde está Hongya Cave?',cn:'洪崖洞在哪里？',py:'Hóngyá dòng zài nǎlǐ?'},{es:'Quiero ir al puente',cn:'我想去千厮门大桥',py:'Wǒ xiǎng qù Qiānsīmén dàqiáo'},{es:'Una foto por favor',cn:'请给我拍张照片',py:'Qǐng gěi wǒ pāi zhāng zhàopiàn'}],
+    tips:[{i:'📸',t:'El mejor ángulo está desde el puente Qiansimen, NO desde dentro. Llega 20 min antes de que enciendan las luces.'},{i:'🌡️',t:'En junio visita de noche cuando baja a ~28°C. Hay brisa del río que refresca.'},{i:'👗',t:'Puedes alquilar hanfu (ropa tradicional) para fotos ~50 CNY/30 min en la entrada.'},{i:'🍜',t:'Los restaurantes del interior son caros y turísticos. Come antes en Bayi Road (3 min del hotel).'}]},
+
+  liziba:{name:'Liziba Station · metro dentro del edificio',emoji:'🚂',cat:'night',
+    addr:'Zhengbei Road, Yuzhong District',district:'重庆市渝中区正北路',
+    steps:['<strong>Desde el hotel:</strong> Toma metro Línea 2 desde Niujiaotuo o Linjiangmen. Dirección Yutu. Bájate en estación <strong>Liziba</strong>.',
+           '<strong>Plataforma observación:</strong> Exit 1, sube escaleras a la plataforma gratuita. Desde aquí ves el tren entrar por el edificio.',
+           '<strong>Punto secreto:</strong> Camina 10 min hasta el paso elevado de <strong>Caiyanba</strong>. Ángulo con montañas al fondo — el que usan los fotógrafos locales.'],
+    info:[{l:'Trenes',v:'6:00–23:00, cada 5–10 min'},{l:'Precio metro',v:'~2–4 CNY'},{l:'Mejor hora',v:'Antes de las 10h'},{l:'Línea',v:'L2 → Liziba'},{l:'Hotel',v:'~15 min en metro'},{l:'Duración',v:'30–45 minutos'}],
+    chinese:[{es:'¿Dónde está la estación Liziba?',cn:'李子坝站在哪里？',py:'Lǐzǐbà zhàn zài nǎlǐ?'},{es:'Línea 2, por favor',cn:'请问2号线在哪里？',py:'Qǐngwèn 2 hào xiàn zài nǎlǐ?'}],
+    tips:[{i:'⏰',t:'Ve antes de las 10h para fotos sin aglomeración. Después de las 11h se llena de grupos de turistas chinos.'},{i:'📸',t:'Espera en la plataforma de observación. El tren pasa por el hueco del edificio en los pisos 6–8. Usa modo ráfaga.'},{i:'🔍',t:'El punto de Caiyanba es donde van los fotógrafos locales. Casi ningún turista extranjero lo conoce.'}]},
+
+  guanyinqiao:{name:'Guanyinqiao Anime District',emoji:'🎌',cat:'anime',
+    addr:'Guanyinqiao Pedestrian Street, Jiangbei District',district:'重庆市江北区观音桥步行街',
+    steps:['<strong>Desde el hotel:</strong> Metro Línea 3 desde Linjiangmen (a pie del hotel) o L9.',
+           '<strong>Bájate en:</strong> Estación <strong>Guanyinqiao</strong>. Sal por cualquier salida.',
+           '<strong>Times Paradise Walk:</strong> Mall principal 6 pisos. Niko and..., marcas streetwear, figuras.',
+           '<strong>Hongding International:</strong> 5 min caminando. Edificio entero de tiendas de anime independientes.',
+           '<strong>Pokémon Center:</strong> Dentro de uno de los malls. Pregunta en cualquier tienda anime.'],
+    info:[{l:'Malls',v:'10:00–22:00 todos los días'},{l:'Entrada',v:'TOTALMENTE GRATIS'},{l:'Metro',v:'L3/9 → Guanyinqiao'},{l:'Hotel',v:'~20 min en metro'},{l:'Tiempo',v:'3–6 horas mínimo'},{l:'AC',v:'Perfecto para el calor junio'}],
+    chinese:[{es:'¿Dónde están las tiendas de anime?',cn:'动漫店在哪里？',py:'Dòngmàn diàn zài nǎlǐ?'},{es:'¿Esto es oficial? (no copia)',cn:'这个是正版吗？',py:'Zhège shì zhèngbǎn ma?'},{es:'¿Cuánto cuesta esto?',cn:'这个多少钱？',py:'Zhège duōshao qián?'}],
+    tips:[{i:'🔍',t:'Para verificar si una figura es oficial (正版) busca el holograma en la caja.'},{i:'💰',t:'Nendoroids: ~18–25€ aquí vs ~60€ en España. El ahorro puede ser enorme.'},{i:'📦',t:'Pide cajas de cartón reforzadas para las figuras si compras mucho (~5–10 CNY extra).'}]},
+
+  zoo:{name:'Chongqing Zoo · 22 Pandas Gigantes',emoji:'🐼',cat:'nature',
+    addr:'Xijiao Road, Jiulongpo District',district:'重庆市九龙坡区西郊路',
+    steps:['<strong>Desde el hotel:</strong> Metro Línea 2 desde Niujiaotuo. Dirección Yutu.',
+           '<strong>Bájate en:</strong> Estación <strong>Dongwuyuan</strong> (动物园). La estación tiene decoración de pandas gigantes.',
+           '<strong>Zona pandas:</strong> Al entrar sigue "大熊猫". Activos y fuera entre las <strong>10:00 y las 11:30h</strong>.',
+           '<strong>Zona monos dorados:</strong> Busca "金丝猴" — naranjas con cara azul. Rarísimos y muy fotogénicos.'],
+    info:[{l:'Precio',v:'25 CNY adultos (~3€)'},{l:'Horario',v:'8:30–18:00 todos los días'},{l:'Pandas activos',v:'10:00–11:30h (crítico)'},{l:'Metro',v:'L2 → Dongwuyuan Exit B'},{l:'Hotel',v:'~25 min en metro'},{l:'Tiempo',v:'3–4 horas'}],
+    chinese:[{es:'¿Dónde están los pandas?',cn:'大熊猫在哪里？',py:'Dàxióngmāo zài nǎlǐ?'},{es:'¿Dónde están los monos dorados?',cn:'金丝猴在哪里？',py:'Jīnsīhóu zài nǎlǐ?'},{es:'Un billete de adulto',cn:'一张成人票',py:'Yī zhāng chéngrén piào'}],
+    tips:[{i:'⏰',t:'CRÍTICO: Los pandas salen a comer entre 10:00 y 11:30h. Después duermen. Llega a las 8:30 de los primeros.'},{i:'🦧',t:'Los monos dorados de nariz chata (金丝猴) son naranja brillante con cara azul. No los te los pierdas.'},{i:'🚇',t:'La estación de metro Dongwuyuan tiene murales de pandas en los andenes. Ya empieza el show.'}]},
+
+  dazu:{name:'Dazu Rock Carvings (大足石刻)',emoji:'🗿',cat:'excursion',
+    addr:'Baoding Scenic Area, Dazu District',district:'重庆市大足区宝顶山风景区',
+    steps:['<strong>Reserva el tour</strong> en Trip.com: "Dazu Rock Carvings Day Tour from Chongqing". ~150–175 CNY transporte.',
+           '<strong>Punto de recogida:</strong> Normalmente frente a Jiefangbei o en el hotel. Confirma al reservar.',
+           '<strong>PASAPORTE físico obligatorio</strong> para extranjeros. Sin él no entran. Regla estricta.',
+           '<strong>Baodingshan:</strong> La sección más impresionante. Pide al guía ir aquí primero.',
+           '<strong>Regreso ~15:00–16:00</strong> para llegar al hotel ~17:00. Por la noche: show de drones.'],
+    info:[{l:'Entrada',v:'~115 CNY por persona'},{l:'Guía inglés',v:'~100 CNY (muy recomendado)'},{l:'Transporte',v:'~150–175 CNY tour'},{l:'Distancia',v:'~100 km · ~2h'},{l:'Tiempo en sitio',v:'3–4 horas'},{l:'Pasaporte',v:'OBLIGATORIO · físico'}],
+    chinese:[{es:'Tenemos reserva para el tour',cn:'我们预订了旅游团',py:'Wǒmen yùdìng le lǚyóutuán'},{es:'¿Dónde está Baoding?',cn:'宝顶山在哪里？',py:'Bǎodǐng shān zài nǎlǐ?'},{es:'¿Puede hablar más despacio?',cn:'请说慢一点',py:'Qǐng shuō màn yīdiǎn'}],
+    tips:[{i:'📄',t:'CRÍTICO: Pasaporte físico. Sin él no entras. No sirve foto ni copia. Es obligatorio para sitios UNESCO.'},{i:'🎙️',t:'El guía en inglés cambia completamente la experiencia. Sin él ves piedras. Con él entiendes el s.XII.'},{i:'☀️',t:'Sal a las 7:00. A las 10h ya aprieta el calor pero es soportable. Más tarde = agotamiento.'}]},
+
+  drones:{name:'Show de Drones · 11.787 · Récord Guinness',emoji:'🚁',cat:'night',
+    addr:'Nanbin Road o Chaotianmen Square',district:'重庆市南岸区南滨路',
+    steps:['<strong>Dos posiciones:</strong> Nanbin Road (sur) = skyline de fondo. Chaotianmen (norte) = desde donde salen.',
+           '<strong>Recomendación:</strong> Nanbin Road es mejor para foto y ambiente. Bares para esperar.',
+           '<strong>Llega 45 min antes</strong> del show para sitio en primera fila junto al río.',
+           '<strong>Desde el hotel tras Dazu:</strong> Taxi o DiDi hasta Nanbin Road (~20 min, ~30 CNY).'],
+    info:[{l:'Precio',v:'TOTALMENTE GRATIS'},{l:'Cuándo',v:'Sábados ~21:00'},{l:'Duración',v:'~20 minutos'},{l:'Dónde ver',v:'Nanbin Road o Chaotianmen'},{l:'Llegar',v:'45 min antes'},{l:'Récord',v:'11.787 drones Guinness 2024'}],
+    chinese:[{es:'¿Dónde se ve el show de drones?',cn:'无人机表演在哪里看？',py:'Wúrénjī biǎoyǎn zài nǎlǐ kàn?'},{es:'¿A qué hora empieza?',cn:'几点开始？',py:'Jǐ diǎn kāishǐ?'}],
+    tips:[{i:'📱',t:'Graba en vídeo, no solo fotos. El movimiento de los drones es lo que impresiona. Usa slow-motion.'},{i:'🍺',t:'Pide una cerveza Chongqing (~20 CNY) en un bar de Nanbin Road y espera el show.'},{i:'🌉',t:'Después del show, Nanbin Road se anima mucho — bares, restaurantes, música en directo.'}]},
+
+  wulong:{name:'Wulong Karst Park · UNESCO',emoji:'🪨',cat:'excursion',
+    addr:'Wulong District, Chongqing',district:'重庆市武隆区',
+    steps:['<strong>Reserva</strong> en Trip.com: "Wulong Karst Three Natural Bridges Furong Cave Day Tour".',
+           '<strong>Salida 6:30:</strong> 3h de trayecto. Zapatos trekking, agua 2L, ropa cómoda, protector solar.',
+           '<strong>Three Natural Bridges:</strong> Los tres arcos de piedra. Hay ascensor gratis pero las escaleras dan mejores perspectivas.',
+           '<strong>Longshuixia Gap:</strong> Desfiladero con río. Fresco y espectacular.',
+           '<strong>Furong Cave:</strong> 25°C dentro. La mejor parte del día en junio.'],
+    info:[{l:'Entrada park',v:'~140–180 CNY'},{l:'Furong Cave',v:'~80 CNY extra'},{l:'Transporte',v:'~200–300 CNY tour'},{l:'Distancia',v:'190 km · ~3h'},{l:'Total día',v:'~12 horas'},{l:'Física',v:'Alta · muchas escaleras'}],
+    chinese:[{es:'¿Dónde está el ascensor?',cn:'电梯在哪里？',py:'Diàntī zài nǎlǐ?'},{es:'Estoy cansado, necesito descansar',cn:'我累了，需要休息',py:'Wǒ lèi le, xūyào xiūxi'}],
+    tips:[{i:'👟',t:'Zapatos de trekking obligatorios. Los suelos están mojados y hay bajadas empinadas. Las sandalias son peligrosas.'},{i:'💧',t:'Lleva 2L de agua mínimo. Las tiendas dentro del parque tienen precios 3x lo normal.'},{i:'🦇',t:'Furong Cave con 25°C tras el calor exterior de 36°C es la mejor ducha de aire del viaje. No la saltes.'},{i:'🎬',t:'Wulong es el escenario de Transformers: La Era de la Extinción (2014).'}]},
+
+  furong:{name:'Furong Cave (芙蓉洞) · 25°C',emoji:'🦇',cat:'nature',
+    addr:'Furong Cave Scenic Area, Wulong District',district:'重庆市武隆区芙蓉洞',
+    steps:['<strong>Última parada de Wulong:</strong> Tu guía te llevará directamente desde Longshuixia Gap.',
+           '<strong>Ticket adicional:</strong> ~80 CNY. Vale absolutamente la pena.',
+           '<strong>Temperatura:</strong> Nada más entrar notarás el cambio: de ~36°C fuera a 25°C dentro.'],
+    info:[{l:'Precio',v:'~80 CNY adicionales'},{l:'Temperatura',v:'25°C constantes todo el año'},{l:'Longitud',v:'2,7 km de recorrido'},{l:'Duración',v:'45–60 minutos'},{l:'Iluminación',v:'Completamente iluminada'},{l:'Dificultad',v:'Baja · camino pavimentado'}],
+    chinese:[{es:'¿Cuándo empieza la visita?',cn:'参观什么时候开始？',py:'Cānguān shénme shíhòu kāishǐ?'}],
+    tips:[{i:'🌡️',t:'Con 36°C fuera y 25°C dentro es literalmente el mejor alivio del calor del viaje. El contraste es glorioso.'},{i:'💎',t:'Tiene "coral de cueva" (coraloide) único en el mundo — no existe en ninguna otra cueva conocida.'},{i:'👕',t:'Si tienes chaqueta ligera, úsala dentro. Al salir quítala para no resfriarte.'}]},
+
+  haitang:{name:'Haitang Xiaoyue Hot Springs',emoji:'♨️',cat:'rest',
+    addr:'587 Nanping East Road, Nan\'an District',district:'重庆市南岸区南坪东路587号',
+    steps:['<strong>Desde el hotel:</strong> Taxi o DiDi directo (~20–25 min, ~40–50 CNY). Di: 南坪东路587号',
+           '<strong>Al llegar:</strong> Compra ticket (98 CNY). Te dan toalla, bañador de repuesto y llave taquilla.',
+           '<strong>Piscinas para pareja:</strong> Cueva (íntima y fresca), rosas (romántica), té verde (relajante).',
+           '<strong>Después del spa:</strong> Nanbin Road a 5 min a pie. Cena con vistas al skyline.'],
+    info:[{l:'Precio',v:'98 CNY/adulto (~12€)'},{l:'Horario',v:'Todo el día · mejor 17–20:30h'},{l:'Piscinas',v:'52 incluyendo cuevas'},{l:'Metro',v:'Circunvalación → Haitangxi'},{l:'Hotel',v:'~20–25 min en taxi'},{l:'Para pareja',v:'Piscina rosas + cueva'}],
+    chinese:[{es:'Dos entradas de adulto',cn:'两张成人票，谢谢',py:'Liǎng zhāng chéngrén piào xièxiè'},{es:'¿Dónde están las piscinas de cueva?',cn:'溶洞温泉在哪里？',py:'Róngdòng wēnquán zài nǎlǐ?'}],
+    tips:[{i:'🌹',t:'La piscina de rosas es la más romántica. Llega antes de las 19h para tener sitio. De noche con luces es increíble.'},{i:'🚿',t:'Lleva bañador — aunque tienen de repuesto los propios son más cómodos. Toallas incluidas.'},{i:'🍽️',t:'Noche perfecta: termas 17–20h → taxi 5 min → cena Nanfeng Cliff Restaurant → copa en rooftop bar.'}]},
+
+  aijia:{name:'Aijia Hotpot · Récord Guinness',emoji:'🍢',cat:'food',
+    addr:'Aijia Hotpot, Chongqing (爱家火锅)',district:'重庆市爱家火锅 · busca en Maps: 爱家火锅',
+    steps:['<strong>Cómo llegar:</strong> Taxi o DiDi. Di al conductor: "爱家火锅" (Àijiā huǒguō).',
+           '<strong>Reserva:</strong> Llama con antelación o Trip.com. Con 5.000 mesas hay sitio casi siempre.',
+           '<strong>El lugar:</strong> Restaurante construido en la ladera de una montaña con terrazas escalonadas.'],
+    info:[{l:'Capacidad',v:'5.000 comensales'},{l:'Precio',v:'~100–150 CNY/persona'},{l:'Récord',v:'Hotpot más grande del mundo'},{l:'Cómo ir',v:'Taxi/DiDi "爱家火锅"'},{l:'Reserva',v:'Recomendada'},{l:'Duración cena',v:'~1,5–2 horas'}],
+    chinese:[{es:'Caldo mitad-mitad, por favor',cn:'鸳鸯锅底，谢谢',py:'Yuānyāng guōdǐ, xièxiè'},{es:'Poco picante, por favor',cn:'微辣，谢谢',py:'Wēi là, xièxiè'},{es:'La cuenta, por favor',cn:'买单，谢谢',py:'Mǎidān, xièxiè'}],
+    tips:[{i:'🌶️',t:'Pide "鸳鸯锅" (caldero mitad picante mitad suave) para poder probar ambos sin sufrir.'},{i:'🍺',t:'La cerveza Chongqing (~20 CNY) con el hotpot es el maridaje local. Adictivo.'},{i:'🎉',t:'Es la cena de despedida perfecta. El hotpot más grande del planeta, en la ciudad del hotpot.'}]}
+};
+
+const LOCATIONS=[
+  {cat:'Icónicas',emoji:'🏮',items:[
+    {n:1,name:'Hongya Cave (洪崖洞)',addr:'88 Binjiang Road, Yuzhong · 7 min a pie hotel',place:'hongya'},
+    {n:2,name:'Liziba Station · metro edificio',addr:'Zhengbei Road, Yuzhong · Metro L2',place:'liziba'},
+    {n:3,name:'Jiefangbei Pedestrian Street',addr:'Liberation Monument, Yuzhong · a pie hotel',place:null},
+    {n:4,name:'Chaotianmen Square',addr:'Chaotianmen, Yuzhong · Metro L6',place:null},
+    {n:5,name:'Raffles City + Crystal Skywalk 250m',addr:'Chaotianmen, Yuzhong',place:'raffles'},
+    {n:6,name:'Teleférico del Yangtze',addr:'Xinhua Road, Yuzhong · a pie hotel',place:'teleferico'},
+    {n:7,name:'Kuixinglou Square · edificio imposible',addr:'Linjiangmen, Yuzhong',place:'kuixinglou'},
+    {n:8,name:'Baixiangju · edificio laberinto',addr:'Yuzhong District',place:null},
+    {n:9,name:'Egongyan Bridge',addr:'Nan\'an District · 15 min taxi',place:'egongyan'},
+    {n:10,name:'Ciqikou Ancient Town (磁器口)',addr:'Shapingba District · Metro L1',place:'ciqikou'}
+  ]},
+  {cat:'Museos y Cultura',emoji:'🏛️',items:[
+    {n:11,name:'Three Gorges Museum · GRATIS',addr:'236 Renmin Road, Yuzhong · Metro L1/2',place:'threegorgues'},
+    {n:12,name:'Great Hall of the People',addr:'People\'s Square, Yuzhong',place:null},
+    {n:13,name:'Huguang Guild Hall',addr:'Dongshuimen, Yuzhong',place:null},
+    {n:14,name:'Luohan Temple · 500 arhats',addr:'Luohan Temple Street, Yuzhong',place:'luohan'},
+    {n:15,name:'Dazu Rock Carvings ★ UNESCO',addr:'Dazu District, ~100 km',place:'dazu'},
+    {n:16,name:'Zhongshan Bookstore piso 50',addr:'Jiefangbei CBD · a pie hotel',place:'bookstore'},
+    {n:17,name:'Tank Art Center · fábrica tanques',addr:'Jiulongpo District',place:null}
+  ]},
+  {cat:'Naturaleza y Parques',emoji:'🌿',items:[
+    {n:18,name:'Wulong Karst Park ★ UNESCO',addr:'Wulong District, ~190 km',place:'wulong'},
+    {n:19,name:'Three Natural Bridges',addr:'Wulong District',place:'wulong'},
+    {n:20,name:'Furong Cave · 25°C',addr:'Wulong District',place:'furong'},
+    {n:21,name:'Longshuixia Gap',addr:'Wulong District',place:'longshuixia'},
+    {n:22,name:'Fairy Mountain (仙女山)',addr:'Wulong District, ~200 km',place:null},
+    {n:23,name:'Eling Park · cafés acantilado',addr:'Eling, Yuzhong',place:'eling'},
+    {n:24,name:'Jialing Park',addr:'Guanyinqiao, Jiangbei',place:null},
+    {n:25,name:'Nanshan Botanical Garden',addr:'Nan\'an District',place:null},
+    {n:26,name:'Fengdu Ghost City (丰都鬼城)',addr:'Fengdu, río Yangtze',place:null}
+  ]},
+  {cat:'Zoos y Vida Salvaje',emoji:'🐼',items:[
+    {n:27,name:'Chongqing Zoo · 22 pandas',addr:'Xijiao Road, Jiulongpo · Metro L2',place:'zoo'},
+    {n:28,name:'Yongchuan Wildlife World · safari',addr:'Yongchuan District, ~58 km',place:'wildlife'},
+    {n:29,name:'Chongqing Aquarium',addr:'Nan\'an District',place:null}
+  ]},
+  {cat:'Malls y Compras',emoji:'🛍️',items:[
+    {n:30,name:'Raffles City Shopping Mall',addr:'Chaotianmen, Yuzhong',place:null},
+    {n:31,name:'Chongqing IFS · túnel tiburones',addr:'Jiefangbei, Yuzhong · a pie hotel',place:'ifs'},
+    {n:32,name:'Times Paradise Walk (时代天街)',addr:'Guanyinqiao, Jiangbei',place:null},
+    {n:33,name:'Beicheng Tianjie (北城天街)',addr:'Guanyinqiao, Jiangbei',place:null},
+    {n:34,name:'MixC Wanxianghui (万象汇)',addr:'Nan\'an District',place:null},
+    {n:35,name:'Deyi World · LED cyberpunk',addr:'Jiefangbei, Yuzhong · a pie hotel',place:'deyi'},
+    {n:36,name:'Hongding International · techwear',addr:'Guanyinqiao, Jiangbei',place:'hongding'},
+    {n:37,name:'Nantianmen Mall Cluster · barato',addr:'Cerca de Raffles City',place:null},
+    {n:38,name:'New Century Plaza',addr:'Jiefangbei, Yuzhong',place:null},
+    {n:39,name:'Metropolitan Plaza',addr:'Guanyinqiao, Jiangbei',place:null}
+  ]},
+  {cat:'Anime · Otaku · TCG',emoji:'🎌',items:[
+    {n:40,name:'Guanyinqiao Anime District',addr:'Guanyinqiao, Jiangbei · Metro L3/9',place:'guanyinqiao'},
+    {n:41,name:'Pokémon Center Chongqing',addr:'Centro comercial Guanyinqiao',place:'pokemon'},
+    {n:42,name:'Pop Mart Flagship Store',addr:'Jiefangbei y Guanyinqiao',place:'popmart'},
+    {n:43,name:'Niko and... Store',addr:'Jiefangbei / Guanyinqiao',place:null},
+    {n:44,name:'满足动漫桌游俱乐部 · TCG One Piece',addr:'大坪龙湖时代汇11栋3楼039 · Tel: 15086708087',place:null}
+  ]},
+  {cat:'Joyas Ocultas · Solo locales',emoji:'🔑',items:[
+    {n:45,name:'Shibati / 18 Steps (十八梯)',addr:'Yuzhong District',place:'shibati'},
+    {n:46,name:'Beicang Creative Park · 1891',addr:'Jiangbei District',place:'beicang'},
+    {n:47,name:'Longmenhao Old Street · sin turistas',addr:'Nan\'an District',place:'longmenhao'},
+    {n:48,name:'Huangjueping Graffiti Street · 1,25km',addr:'Shapingba District',place:'graffiti'},
+    {n:49,name:'Nanping 1980s Old Street',addr:'Nanping, Nan\'an District',place:null},
+    {n:50,name:'Testbed2 Creative Park',addr:'Nan\'an District',place:null},
+    {n:51,name:'Caiyanba Overpass · foto secreta metro',addr:'Caiyanba, Yuzhong',place:'caiyanba'},
+    {n:52,name:'Eling Cliff Cafes · vistas Ghibli',addr:'Eling, Yuzhong',place:'eling'},
+    {n:53,name:'Qiansimen Bridge · foto Hongya Cave',addr:'Yuzhong District',place:'qiansimen'},
+    {n:54,name:'Dajia Alley Cliffside Walkway',addr:'Cangbai Road, junto a Hongya Cave',place:'hongya'}
+  ]},
+  {cat:'Experiencias Únicas',emoji:'✨',items:[
+    {n:55,name:'Drone Show · 11.787 drones · Guinness',addr:'Sábados 21h · Chaotianmen / Nanbin Road',place:'drones'},
+    {n:56,name:'Two Rivers Night Cruise',addr:'Chaotianmen Port, Yuzhong',place:'crucero'},
+    {n:57,name:'Show Chongqing 1949 · teatro 360°',addr:'Ciqikou Ancient Town, Shapingba',place:'show1949'},
+    {n:58,name:'Aijia Hotpot · 5.000 comensales',addr:'Récord Guinness · ladera montaña',place:'aijia'},
+    {n:59,name:'Raffles Sky Garden Swing · 250m',addr:'Raffles City, Chaotianmen',place:'raffles'},
+    {n:60,name:'Haitang Xiaoyue Hot Springs',addr:'587 Nanping East Road, Nan\'an',place:'haitang'}
+  ]}
+];
+
+/* ═══════════════════════════════════
+   STATE & STORAGE
+═══════════════════════════════════ */
+const SK='cq_v2';
+let STATE={edits:{},stars:[],visited:[]};
+function loadState(){try{const s=localStorage.getItem(SK);if(s)STATE=JSON.parse(s);}catch(e){}}
+function saveState(){try{localStorage.setItem(SK,JSON.stringify(STATE));}catch(e){}}
+loadState();
+
+let currentDay=0;
+let editMode=false;
+let currentEditId=null;
+
+/* ═══════════════════════════════════
+   SCREEN NAVIGATION
+═══════════════════════════════════ */
+function showScreen(name,dayIdx){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('vis'));
+  document.querySelectorAll('.bnav-item').forEach(b=>b.classList.remove('on'));
+  document.getElementById('s-'+name).classList.add('vis');
+  const bn=document.getElementById('bnav-'+name);
+  if(bn)bn.classList.add('on');
+  if(name==='home'){updateHome();}
+  else if(name==='days'){renderDay(dayIdx||currentDay);}
+  else if(name==='explore'){renderExplore();}
+  else if(name==='saved'){renderSaved();}
+}
+
+/* ═══════════════════════════════════
+   HOME
+═══════════════════════════════════ */
+function updateHome(){
+  const visited=STATE.visited.length;
+  const stars=STATE.stars.length;
+  document.getElementById('qs-visited').textContent=visited;
+  document.getElementById('qs-stars').textContent=stars;
+  // count total slots
+  let total=0;DAYS.forEach(d=>{if(!d.rest&&d.slots)total+=d.slots.length;});
+  const pct=total>0?Math.round(visited/total*100):0;
+  document.getElementById('pb-pct').textContent=pct+'%';
+  document.getElementById('pb-fill').style.width=pct+'%';
+  renderDayCards();
+  renderHighlights();
+}
+
+function renderDayCards(){
+  const c=document.getElementById('day-cards-container');
+  c.innerHTML='';
+  DAYS.forEach((d,i)=>{
+    const el=document.createElement('div');
+    el.className='day-card-mini'+(d.rest?' rest-day':'');
+    el.style.borderTop='3px solid '+d.color;
+    const visitedCount=d.slots?d.slots.filter(s=>STATE.visited.includes(s.id)).length:0;
+    el.innerHTML=`
+      <div class="dcm-num">${d.day} · ${d.date}</div>
+      <div class="dcm-title">${d.title}</div>
+      <div class="dcm-bar" style="background:${d.color}30"><div style="height:100%;width:${d.slots&&d.slots.length?Math.round(visitedCount/d.slots.length*100):0}%;background:${d.color};border-radius:1px"></div></div>
+      <div class="dcm-tags">${d.slots?'<span class="dcm-tag">'+d.slots.length+' lugares</span>':''}</div>
+    `;
+    el.onclick=()=>showScreen('days',i);
+    c.appendChild(el);
+  });
+}
+
+function renderHighlights(){
+  const h=document.getElementById('highlights-container');
+  const highlights=[
+    {id:'h1',emoji:'🏮',name:'Hongya Cave de noche',day:'Día 1 · 19:30',place:'hongya'},
+    {id:'h2',emoji:'🐼',name:'Pandas en el zoo',day:'Día 3 · 8:30',place:'zoo'},
+    {id:'h3',emoji:'🗿',name:'Dazu Rock Carvings UNESCO',day:'Día 5 · 9:30',place:'dazu'},
+    {id:'h4',emoji:'🚁',name:'Show de Drones Guinness',day:'Día 5 · 21:00',place:'drones'},
+    {id:'h5',emoji:'🪨',name:'Wulong Karst UNESCO',day:'Día 8 · 10:00',place:'wulong'},
+    {id:'h6',emoji:'♨️',name:'Haitang Hot Springs',day:'Día 9 · pareja',place:'haitang'},
+  ];
+  h.innerHTML='';
+  highlights.forEach(hi=>{
+    const el=document.createElement('div');
+    el.className='slot-card';
+    el.innerHTML=`<div class="slot-accent" style="background:#e8b84b"></div><div class="slot-main"><div class="slot-left2"><div class="slot-emoji2">${hi.emoji}</div></div><div class="slot-body2"><div class="slot-name2">${hi.name}</div><div class="slot-desc2" style="color:#7a7890;font-size:11px">${hi.day}</div></div><div style="color:#383845;font-size:12px;padding-top:2px">›</div></div>`;
+    if(hi.place&&PLACE_DETAIL[hi.place])el.onclick=()=>openDetail(hi.place);
+    h.appendChild(el);
+  });
+}
+
+/* ═══════════════════════════════════
+   DAY RENDER
+═══════════════════════════════════ */
+function renderDay(idx){
+  currentDay=idx;
+  const d=DAYS[idx];
+  document.getElementById('dn-title').textContent=d.day+' — '+d.title;
+  document.getElementById('dn-sub').textContent=d.date;
+  document.getElementById('btn-prev').disabled=idx===0;
+  document.getElementById('btn-next').disabled=idx===DAYS.length-1;
+
+  const content=document.getElementById('day-content');
+  if(d.rest){
+    content.innerHTML=`
+      <div class="rest-day-full">
+        <div class="rdf-char">休</div>
+        <div class="rdf-title">${d.title}</div>
+        <div class="rdf-text">Día sin agenda fija. Recuperación y caprichos.</div>
+        <div class="rdf-opts">${d.restIdeas.map(r=>`<span class="rdf-opt">${r}</span>`).join('')}</div>
+      </div>`;
+    return;
+  }
+
+  const catColors={anime:'#9b6dff',nature:'#2ecfb0',culture:'#c9922a',night:'#4a9eff',food:'#ff6b9d',excursion:'#e8443a',rest:'#7a7890'};
+  const statsHtml=d.stats?`<div class="day-stats">${d.stats.map((s,i)=>`<div class="dst"><div class="dst-n">${s}</div><div class="dst-l">${d.statLabels[i]}</div></div>`).join('')}</div>`:'';
+
+  let slotsHtml='<div style="padding:.5rem 0 1rem">';
+  d.slots.forEach(slot=>{
+    const ed=STATE.edits[slot.id]||{};
+    const emoji=ed.emoji||slot.emoji;
+    const name=ed.name||slot.name;
+    const note=ed.note||'';
+    const isDone=STATE.visited.includes(slot.id);
+    const isStar=STATE.stars.includes(slot.id);
+    const color=catColors[slot.cat]||'#7a7890';
+    const tagsHtml=slot.tags.map(t=>`<span class="stag stag-${t.c}">${t.t}</span>`).join('');
+    slotsHtml+=`
+      <div class="slot-card${isDone?' done':''}${isStar?' starred':''}" data-sid="${slot.id}" onclick="slotTap('${slot.id}','${slot.place||''}')">
+        <button class="edit-btn-slot" onclick="event.stopPropagation();openEditSheet('${slot.id}')">✏️</button>
+        <div class="slot-card-inner">
+          <div class="slot-accent" style="background:${color}"></div>
+          <div class="slot-main">
+            <div class="slot-left2">
+              <div class="slot-time2">${slot.time}</div>
+              <div class="slot-emoji2">${emoji}</div>
+            </div>
+            <div class="slot-body2">
+              <div class="slot-name2">${isStar?'⭐ ':''}${name}${isDone?' ✅':''}</div>
+              <div class="slot-desc2">${slot.desc}</div>
+              <div class="slot-tags">${tagsHtml}</div>
+              ${note?`<div class="user-note-inline">📝 ${note}</div>`:''}
+              ${slot.place&&PLACE_DETAIL[slot.place]?'<div class="slot-tap-hint">TAP PARA MÁS INFO ›</div>':''}
+            </div>
+          </div>
+        </div>
+      </div>`;
+  });
+  slotsHtml+='</div>';
+  content.innerHTML=statsHtml+slotsHtml;
+}
+
+function slotTap(sid,place){
+  if(editMode)return;
+  if(place&&PLACE_DETAIL[place])openDetail(place);
+  else showQuickActions(sid);
+}
+
+function showQuickActions(sid){
+  const isDone=STATE.visited.includes(sid);
+  const isStar=STATE.stars.includes(sid);
+  // simple toggle visit on tap if no detail
+  if(!isDone){
+    STATE.visited.push(sid);
+    toast('¡Marcado como visitado ✅');
+  } else {
+    STATE.visited=STATE.visited.filter(x=>x!==sid);
+    toast('Desmarcado');
+  }
+  saveState();
+  renderDay(currentDay);
+  updateHome();
+}
+
+function prevDay(){if(currentDay>0)renderDay(currentDay-1);}
+function nextDay(){if(currentDay<DAYS.length-1)renderDay(currentDay+1);}
+
+/* ═══════════════════════════════════
+   DETAIL DRAWER
+═══════════════════════════════════ */
+function openDetail(placeId){
+  const d=PLACE_DETAIL[placeId];
+  if(!d)return;
+  const catColors={anime:'#9b6dff',nature:'#2ecfb0',culture:'#c9922a',night:'#4a9eff',food:'#ff6b9d',excursion:'#e8443a',rest:'#ff6b9d'};
+  const ac=catColors[d.cat]||'#e8b84b';
+  const stepsHtml=d.steps.map((s,i)=>`<div class="step-item"><div class="step-num">${i+1}</div><div class="step-text">${s}</div></div>`).join('');
+  const infoHtml=d.info.map(i=>`<div class="info-box"><div class="info-label">${i.l}</div><div class="info-val">${i.v}</div></div>`).join('');
+  const zhHtml=d.chinese.map(r=>`<div class="zh-row"><span class="zh-es">${r.es}</span><div class="zh-right"><span class="zh-cn">${r.cn}</span><span class="zh-py">${r.py}</span></div></div>`).join('');
+  const tipsHtml=d.tips.map(t=>`<div class="tip-item"><span class="tip-icon">${t.i}</span><span>${t.t}</span></div>`).join('');
+
+  document.getElementById('det-content').innerHTML=`
+    <div class="dd-header">
+      <div class="dd-ey">${d.name}</div>
+      <div class="dd-title">${d.emoji} ${d.name}</div>
+      <div class="dd-pills">
+        ${d.info.slice(0,3).map(i=>`<span class="dd-pill" style="background:${ac}18;color:${ac};border:1px solid ${ac}30">${i.l}: ${i.v}</span>`).join('')}
+      </div>
+    </div>
+    <div class="dd-section">
+      <div class="dd-sec-title">📍 Ubicación</div>
+      <div class="dd-map-box">
+        <div class="dd-map-icon">${d.emoji}</div>
+        <div><div class="dd-map-name">${d.name}</div><div class="dd-map-addr">${d.addr}</div><div class="dd-map-addr" style="margin-top:2px;color:#4a4858">${d.district}</div></div>
+      </div>
+      <div class="dd-sec-title">Cómo llegar desde el hotel</div>
+      <div class="steps-list">${stepsHtml}</div>
+    </div>
+    <div class="dd-section">
+      <div class="dd-sec-title">🕐 Información práctica</div>
+      <div class="info-grid">${infoHtml}</div>
+    </div>
+    ${d.chinese.length?`<div class="dd-section"><div class="dd-sec-title">🀄 Frases útiles en chino</div><div class="zh-box">${zhHtml}</div></div>`:''}
+    <div class="dd-section">
+      <div class="dd-sec-title">💡 Consejos locales</div>
+      <div class="tips-list">${tipsHtml}</div>
+    </div>
+  `;
+  document.getElementById('det-overlay').classList.add('open');
+  document.getElementById('det-drawer').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeDetail(){
+  document.getElementById('det-overlay').classList.remove('open');
+  document.getElementById('det-drawer').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+let detStartY=0;
+document.getElementById('det-drawer').addEventListener('touchstart',e=>{detStartY=e.touches[0].clientY},{passive:true});
+document.getElementById('det-drawer').addEventListener('touchend',e=>{if(e.changedTouches[0].clientY-detStartY>80)closeDetail();},{passive:true});
+
+/* ═══════════════════════════════════
+   EXPLORE
+═══════════════════════════════════ */
+function renderExplore(){
+  const c=document.getElementById('explore-container');
+  c.innerHTML='';
+  LOCATIONS.forEach((cat,ci)=>{
+    const el=document.createElement('div');
+    el.className='explore-cat';
+    el.innerHTML=`
+      <div class="ec-head" onclick="toggleCat(${ci})">
+        <span class="ec-emoji">${cat.emoji}</span>
+        <div class="ec-info"><div class="ec-title">${cat.cat}</div><div class="ec-sub">${cat.items.length} lugares</div></div>
+        <span class="ec-arrow" id="ec-arr-${ci}">›</span>
+      </div>
+      <div class="ec-content" id="ec-body-${ci}">
+        ${cat.items.map(item=>`
+          <div class="ec-item" onclick="${item.place&&PLACE_DETAIL[item.place]?`openDetail('${item.place}')`:'void(0)'}">
+            <span class="ec-num">#${item.n}</span>
+            <div style="flex:1"><div class="ec-iname">${item.name}</div><div class="ec-iaddr">${item.addr}</div></div>
+            <span class="ec-chevron">${item.place&&PLACE_DETAIL[item.place]?'›':''}</span>
+          </div>`).join('')}
+      </div>`;
+    c.appendChild(el);
+  });
+}
+
+function toggleCat(ci){
+  const body=document.getElementById('ec-body-'+ci);
+  const arr=document.getElementById('ec-arr-'+ci);
+  body.classList.toggle('open');
+  arr.classList.toggle('open');
+}
+
+/* ═══════════════════════════════════
+   SAVED / STARRED
+═══════════════════════════════════ */
+function renderSaved(){
+  const c=document.getElementById('saved-container');
+  if(STATE.stars.length===0&&STATE.visited.length===0&&Object.keys(STATE.edits).length===0){
+    c.innerHTML=`<div class="saved-empty"><div class="se-icon">⭐</div><div class="se-title">Sin favoritos aún</div><div class="se-text">Activa el modo edición (✏️) y marca tus favoritos con ⭐. También aparecen aquí las tarjetas visitadas y tus notas.</div></div>`;
+    return;
+  }
+  let html='<div class="saved-list">';
+  if(STATE.stars.length>0){
+    html+='<div style="font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin:.25rem 0">⭐ Favoritos</div>';
+    STATE.stars.forEach(sid=>{
+      const slot=findSlot(sid);if(!slot)return;
+      const ed=STATE.edits[sid]||{};
+      html+=`<div class="saved-item" onclick="${slot.place&&PLACE_DETAIL[slot.place]?`openDetail('${slot.place}')`:''};renderSaved()"><span class="si-emoji">${ed.emoji||slot.emoji}</span><div class="si-body"><div class="si-name">${ed.name||slot.name}</div><div class="si-day">${slot.desc.substring(0,40)}...</div></div><button class="si-remove" onclick="event.stopPropagation();toggleStar('${sid}');renderSaved()">✕</button></div>`;
+    });
+  }
+  if(STATE.visited.length>0){
+    html+='<div style="font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin:.75rem 0 .25rem">✅ Visitados ('+STATE.visited.length+')</div>';
+    STATE.visited.forEach(sid=>{
+      const slot=findSlot(sid);if(!slot)return;
+      const ed=STATE.edits[sid]||{};
+      html+=`<div class="saved-item"><span class="si-emoji">${ed.emoji||slot.emoji}</span><div class="si-body"><div class="si-name" style="opacity:.6;text-decoration:line-through">${ed.name||slot.name}</div></div><button class="si-remove" onclick="toggleVisit('${sid}');renderSaved()">↩</button></div>`;
+    });
+  }
+  const notedSlots=Object.entries(STATE.edits).filter(([k,v])=>v.note);
+  if(notedSlots.length>0){
+    html+='<div style="font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin:.75rem 0 .25rem">📝 Notas</div>';
+    notedSlots.forEach(([sid,ed])=>{
+      const slot=findSlot(sid);if(!slot)return;
+      html+=`<div class="saved-item"><span class="si-emoji">${ed.emoji||slot.emoji}</span><div class="si-body"><div class="si-name">${ed.name||slot.name}</div><div class="si-day" style="color:var(--purple);font-style:italic">📝 ${ed.note}</div></div></div>`;
+    });
+  }
+  html+='</div>';
+  c.innerHTML=html;
+}
+
+function findSlot(sid){
+  for(const d of DAYS){if(d.slots)for(const s of d.slots)if(s.id===sid)return s;}
+  return null;
+}
+
+function toggleStar(sid){
+  if(STATE.stars.includes(sid))STATE.stars=STATE.stars.filter(x=>x!==sid);
+  else STATE.stars.push(sid);
+  saveState();updateHome();
+}
+function toggleVisit(sid){
+  if(STATE.visited.includes(sid))STATE.visited=STATE.visited.filter(x=>x!==sid);
+  else STATE.visited.push(sid);
+  saveState();updateHome();
+}
+
+function resetAll(){
+  if(!confirm('¿Borrar todos tus favoritos, visitas y notas?'))return;
+  STATE={edits:{},stars:[],visited:[]};
+  saveState();renderSaved();updateHome();toast('Datos reseteados');
+}
+
+/* ═══════════════════════════════════
+   EDIT MODE
+═══════════════════════════════════ */
+function toggleEditMode(){
+  editMode=!editMode;
+  document.body.classList.toggle('edit-mode',editMode);
+  const fab=document.getElementById('fab-edit');
+  const hbtn=document.getElementById('edit-toggle');
+  if(editMode){
+    fab.textContent='✓ LISTO';hbtn.textContent='✓ Listo';hbtn.classList.add('active');
+    toast('Modo edición ON · toca ✏️ en cualquier tarjeta');
+  } else {
+    fab.textContent='✏️ EDITAR';hbtn.textContent='✏️ Editar';hbtn.classList.remove('active');
+    toast('Guardado');
+  }
+}
+
+const EMOJI_SETS={
+  'Lugares':['🏮','🚂','🎌','🐼','🏺','🏛️','🗿','🪨','🦇','🚡','🎭','🏯','🌆','📷','⛩️'],
+  'Comida':['🍲','🍜','🌶️','🐟','🥟','🍡','🫕','🍺','☕','🍱','🍢','🥢','🍛','🥘'],
+  'Naturaleza':['🌿','🦒','🐾','🦁','🌺','🏔️','🌊','🌲','🦋','🐠','🌸','🍃','🪷'],
+  'Noche':['🌃','🌉','🍸','🎶','💫','✨','🌙','🥂','🎇','🎆','🌠','🔮','💡'],
+  'Marcas':['⭐','❤️','✅','⚠️','🔴','🟡','🟢','🔵','💜','🖤','📝','📌','🏷️','🎯','🔥']
+};
+
+function openEditSheet(sid){
+  currentEditId=sid;
+  const slot=findSlot(sid);if(!slot)return;
+  const ed=STATE.edits[sid]||{};
+  const emoji=ed.emoji||slot.emoji;
+  const name=ed.name||slot.name;
+  const note=ed.note||'';
+  const isDone=STATE.visited.includes(sid);
+  const isStar=STATE.stars.includes(sid);
+
+  let emojiHtml='';
+  Object.entries(EMOJI_SETS).forEach(([cat,emojis])=>{
+    emojiHtml+=`<div class="emoji-cat-label">${cat}</div><div class="emoji-grid">${emojis.map(e=>`<button class="epick${e===emoji?' sel':''}" onclick="pickEmoji('${e}',this)">${e}</button>`).join('')}</div>`;
+  });
+
+  document.getElementById('edit-sheet-content').innerHTML=`
+    <div class="es-section">
+      <div class="es-label">Emoji actual</div>
+      <div class="es-preview" id="es-preview">${emoji}</div>
+      <div class="es-label">Cambiar emoji</div>
+      <div class="emoji-scroll">${emojiHtml}</div>
+    </div>
+    <div class="es-section">
+      <div class="es-label">Nombre personalizado</div>
+      <input class="es-input" id="es-name" value="${name.replace(/"/g,'')}" placeholder="Dejar para mantener original">
+    </div>
+    <div class="es-section">
+      <div class="es-label">Tu nota personal</div>
+      <textarea class="es-input es-textarea" id="es-note" placeholder="Añade tu comentario...">${note}</textarea>
+    </div>
+    <div class="es-section">
+      <div class="es-toggles">
+        <label class="es-toggle"><input type="checkbox" id="es-done" ${isDone?'checked':''} onchange="toggleVisit('${sid}');"><span>✅ Visitado</span></label>
+        <label class="es-toggle"><input type="checkbox" id="es-star" ${isStar?'checked':''} onchange="toggleStar('${sid}');"><span>⭐ Favorito</span></label>
+      </div>
+    </div>
+  `;
+  document.getElementById('es-save-btn').onclick=()=>saveEdit(sid);
+  document.getElementById('edit-overlay').classList.add('open');
+  document.getElementById('edit-sheet').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function pickEmoji(e,btn){
+  document.querySelectorAll('.epick').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+  document.getElementById('es-preview').textContent=e;
+}
+
+function saveEdit(sid){
+  const emoji=document.getElementById('es-preview').textContent;
+  const name=document.getElementById('es-name').value.trim();
+  const note=document.getElementById('es-note').value.trim();
+  if(!STATE.edits[sid])STATE.edits[sid]={};
+  STATE.edits[sid]={emoji,name,note};
+  saveState();
+  closeEditSheet();
+  renderDay(currentDay);
+  toast('Guardado ✓');
+}
+
+function closeEditSheet(){
+  document.getElementById('edit-overlay').classList.remove('open');
+  document.getElementById('edit-sheet').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+let esStartY=0;
+document.getElementById('edit-sheet').addEventListener('touchstart',e=>{esStartY=e.touches[0].clientY},{passive:true});
+document.getElementById('edit-sheet').addEventListener('touchend',e=>{if(e.changedTouches[0].clientY-esStartY>80)closeEditSheet();},{passive:true});
+
+/* ═══════════════════════════════════
+   TOAST
+═══════════════════════════════════ */
+let toastTimer;
+function toast(msg){
+  clearTimeout(toastTimer);
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.classList.add('show');
+  toastTimer=setTimeout(()=>el.classList.remove('show'),2200);
+}
+
+/* ═══════════════════════════════════
+   SERVICE WORKER (inline)
+═══════════════════════════════════ */
+if('serviceWorker' in navigator){
+  const swCode=`
+const V='cq-v1';
+self.addEventListener('install',e=>{e.waitUntil(caches.open(V).then(c=>c.addAll(['./'])).then(()=>self.skipWaiting()));});
+self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==V).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));});
+self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(res=>{const rc=res.clone();caches.open(V).then(c=>c.put(e.request,rc));return res;}).catch(()=>r)));});
+  `;
+  const blob=new Blob([swCode],{type:'application/javascript'});
+  const swUrl=URL.createObjectURL(blob);
+  navigator.serviceWorker.register(swUrl,{scope:'./'}).catch(()=>{});
+}
+
+/* ═══════════════════════════════════
+   INIT
+═══════════════════════════════════ */
+updateHome();
+</script>
+</body>
+</html>
